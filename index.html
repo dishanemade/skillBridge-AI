@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkillBridge AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0F1B2D;
+    --bg-panel: #16273D;
+    --bg-card: #1C2E45;
+    --bg-card-hover: #21324B;
+    --accent: #C98A3E;
+    --accent-soft: rgba(201,138,62,0.16);
+    --accent-line: rgba(201,138,62,0.45);
+    --success: #4FA98C;
+    --success-soft: rgba(79,169,140,0.16);
+    --success-line: rgba(79,169,140,0.5);
+    --text: #EDEAE3;
+    --text-muted: #8CA0B8;
+    --text-faint: #5B6E86;
+    --border: rgba(255,255,255,0.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(201,138,62,0.08), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(79,169,140,0.06), transparent 60%);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+  .wrap{
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px 120px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom: 64px;
+  }
+  .brand svg{ display:block; }
+  .brand-name{
+    font-family:'Fraunces', serif;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(34px, 5vw, 50px);
+    line-height: 1.12;
+    margin: 0 0 18px;
+    max-width: 15ch;
+  }
+  h1 em{
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .sub{
+    color: var(--text-muted);
+    font-size: 17px;
+    max-width: 52ch;
+    margin: 0 0 48px;
+  }
+
+  /* ---- input panel ---- */
+  .panel{
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 56px;
+  }
+  .field{ margin-bottom: 22px; }
+  .field:last-child{ margin-bottom: 0; }
+  label{
+    display:block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .hint{
+    color: var(--text-faint);
+    font-weight: 400;
+    font-size: 13px;
+  }
+  .chip-box{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items:center;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    min-height: 48px;
+  }
+  .chip-box:focus-within{
+    border-color: var(--accent-line);
+  }
+  .chip{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background: var(--success-soft);
+    border: 1px solid var(--success-line);
+    color: var(--text);
+    font-size: 13.5px;
+    padding: 5px 6px 5px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .chip button{
+    background:none;
+    border:none;
+    color: var(--text-muted);
+    cursor:pointer;
+    font-size: 15px;
+    line-height:1;
+    padding: 3px;
+    border-radius: 50%;
+    display:flex;
+  }
+  .chip button:hover{ color: var(--text); background: rgba(255,255,255,0.08); }
+  .chip-box input{
+    flex: 1;
+    min-width: 140px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14.5px;
+    padding: 6px 4px;
+  }
+  .chip-box input::placeholder{ color: var(--text-faint); }
+
+  .quick-adds{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top: 12px;
+  }
+  .quick-add{
+    background: transparent;
+    border: 1px dashed var(--border);
+    color: var(--text-muted);
+    font-size: 12.5px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .quick-add:hover{ border-color: var(--accent-line); color: var(--text); }
+
+  select{
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14.5px;
+    padding: 13px 14px;
+    border-radius: 10px;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1L7 7L13 1' stroke='%238CA0B8' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+  }
+  select:focus{ border-color: var(--accent-line); }
+
+  .go-btn{
+    margin-top: 26px;
+    width: 100%;
+    background: var(--accent);
+    color: #1B1305;
+    border: none;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: filter 0.15s ease;
+  }
+  .go-btn:hover{ filter: brightness(1.08); }
+  .go-btn:disabled{ opacity: 0.4; cursor: not-allowed; filter:none; }
+
+  /* ---- results ---- */
+  .results-head{
+    display:flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .results-head h2{
+    font-family:'Fraunces', serif;
+    font-weight: 500;
+    font-size: 22px;
+    margin: 0;
+  }
+  .results-count{
+    color: var(--text-faint);
+    font-size: 13.5px;
+  }
+
+  .job-card{
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .job-row{
+    display:flex;
+    align-items:center;
+    gap: 18px;
+    padding: 20px 24px;
+    cursor: pointer;
+  }
+  .job-row:hover{ background: var(--bg-card-hover); }
+  .match-ring{
+    position: relative;
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+  }
+  .match-ring svg{ width:52px; height:52px; transform: rotate(-90deg); }
+  .match-ring .pct{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+  }
+  .job-info{ flex: 1; min-width: 0; }
+  .job-title{
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0 0 3px;
+  }
+  .job-meta{
+    color: var(--text-muted);
+    font-size: 13.5px;
+  }
+  .job-meta .gap-count{ color: var(--accent); }
+  .chevron{
+    color: var(--text-faint);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+  .job-card.open .chevron{ transform: rotate(180deg); }
+
+  .job-detail{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.28s ease;
+  }
+  .job-card.open .job-detail{ max-height: 600px; }
+  .job-detail-inner{
+    padding: 4px 24px 26px;
+    border-top: 1px solid var(--border);
+  }
+  .span-label{
+    font-size: 12.5px;
+    color: var(--text-faint);
+    margin: 18px 0 10px;
+  }
+  .planks{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .plank{
+    font-size: 13px;
+    padding: 7px 13px;
+    border-radius: 8px;
+  }
+  .plank.have{
+    background: var(--success-soft);
+    border: 1px solid var(--success-line);
+    color: var(--text);
+  }
+  .plank.gap{
+    background: transparent;
+    border: 1px dashed var(--accent-line);
+    color: var(--accent);
+  }
+  .close-note{
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 13.5px;
+  }
+  .close-note strong{ color: var(--text); font-weight:600; }
+
+  .empty{
+    text-align:center;
+    padding: 60px 20px;
+    color: var(--text-faint);
+    font-size: 14.5px;
+  }
+  .empty-serif{
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: 19px;
+    color: var(--text-muted);
+    display:block;
+    margin-bottom: 8px;
+  }
+
+  @media (max-width: 560px){
+    .wrap{ padding: 36px 16px 80px; }
+    .job-row{ padding: 16px; gap: 12px; }
+    .panel{ padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="brand">
+    <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+      <path d="M2 18C2 18 5 10 13 10C21 10 24 18 24 18" stroke="#C98A3E" stroke-width="2" stroke-linecap="round"/>
+      <path d="M2 18V21" stroke="#4FA98C" stroke-width="2" stroke-linecap="round"/>
+      <path d="M24 18V21" stroke="#4FA98C" stroke-width="2" stroke-linecap="round"/>
+      <path d="M13 10V6" stroke="#EDEAE3" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span class="brand-name">SkillBridge AI</span>
+  </div>
+
+  <h1>See the gap.<br><em>Build the bridge.</em></h1>
+  <p class="sub">List what you already know. SkillBridge lines it up against real job requirements and shows you exactly which planks are missing — and which roles you're closest to.</p>
+
+  <div class="panel">
+    <div class="field">
+      <label>Your skills <span class="hint">— type one and press enter</span></label>
+      <div class="chip-box" id="chipBox">
+        <input type="text" id="skillInput" placeholder="e.g. Python, Excel, SQL...">
+      </div>
+      <div class="quick-adds" id="quickAdds"></div>
+    </div>
+
+    <div class="field">
+      <label>Narrow it to one role <span class="hint">— optional</span></label>
+      <select id="roleFilter">
+        <option value="">Compare against every role</option>
+      </select>
+    </div>
+
+    <button class="go-btn" id="goBtn" disabled>Find my matches</button>
+  </div>
+
+  <div id="resultsArea"></div>
+
+</div>
+
+<script>
+const JOBS = [
+  { title: "Frontend Developer", org: "Product & Web team", skills: ["javascript","html","css","react","git","responsive design","rest apis"] },
+  { title: "Backend Developer", org: "Platform team", skills: ["python","sql","apis","git","docker","system design","testing"] },
+  { title: "Data Analyst", org: "Insights team", skills: ["sql","excel","data visualization","python","statistics","communication"] },
+  { title: "Data Scientist", org: "ML team", skills: ["python","statistics","machine learning","sql","pandas","data visualization","communication"] },
+  { title: "DevOps Engineer", org: "Infrastructure team", skills: ["linux","docker","kubernetes","ci/cd","cloud platforms","scripting","networking"] },
+  { title: "UX Designer", org: "Design team", skills: ["figma","user research","wireframing","prototyping","communication","html","css"] },
+  { title: "Product Manager", org: "Product org", skills: ["communication","roadmapping","data analysis","stakeholder management","sql","agile"] },
+  { title: "Project Manager", org: "Delivery team", skills: ["agile","stakeholder management","communication","risk management","scheduling","excel"] },
+  { title: "QA Engineer", org: "Quality team", skills: ["testing","test automation","sql","git","attention to detail","communication"] },
+  { title: "Digital Marketing Specialist", org: "Growth team", skills: ["seo","content strategy","data analysis","communication","excel","social media"] },
+];
+
+const ALL_SKILLS = [...new Set(JOBS.flatMap(j => j.skills))].sort();
+
+let userSkills = [];
+
+const chipBox = document.getElementById('chipBox');
+const skillInput = document.getElementById('skillInput');
+const quickAdds = document.getElementById('quickAdds');
+const roleFilter = document.getElementById('roleFilter');
+const goBtn = document.getElementById('goBtn');
+const resultsArea = document.getElementById('resultsArea');
+
+JOBS.forEach(j => {
+  const opt = document.createElement('option');
+  opt.value = j.title;
+  opt.textContent = j.title;
+  roleFilter.appendChild(opt);
+});
+
+function norm(s){ return s.trim().toLowerCase(); }
+
+function renderChips(){
+  chipBox.querySelectorAll('.chip').forEach(c => c.remove());
+  userSkills.forEach((s, i) => {
+    const chip = document.createElement('span');
+    chip.className = 'chip';
+    chip.innerHTML = `${s}<button aria-label="Remove ${s}" data-i="${i}">&times;</button>`;
+    chipBox.insertBefore(chip, skillInput);
+  });
+  goBtn.disabled = userSkills.length === 0;
+  renderQuickAdds();
+}
+
+function renderQuickAdds(){
+  quickAdds.innerHTML = '';
+  const remaining = ALL_SKILLS.filter(s => !userSkills.includes(s)).slice(0, 8);
+  remaining.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'quick-add';
+    btn.type = 'button';
+    btn.textContent = '+ ' + s;
+    btn.addEventListener('click', () => addSkill(s));
+    quickAdds.appendChild(btn);
+  });
+}
+
+function addSkill(raw){
+  const s = norm(raw);
+  if (!s) return;
+  if (!userSkills.includes(s)) userSkills.push(s);
+  skillInput.value = '';
+  renderChips();
+}
+
+skillInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    addSkill(skillInput.value);
+  } else if (e.key === 'Backspace' && skillInput.value === '' && userSkills.length){
+    userSkills.pop();
+    renderChips();
+  }
+});
+
+chipBox.addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-i]');
+  if (btn){
+    userSkills.splice(Number(btn.dataset.i), 1);
+    renderChips();
+  } else {
+    skillInput.focus();
+  }
+});
+
+function ringSVG(pct, color){
+  const r = 21, c = 2 * Math.PI * r;
+  const offset = c - (pct/100) * c;
+  return `<svg viewBox="0 0 52 52">
+    <circle cx="26" cy="26" r="${r}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
+    <circle cx="26" cy="26" r="${r}" fill="none" stroke="${color}" stroke-width="4"
+      stroke-dasharray="${c}" stroke-dashoffset="${offset}" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function computeResults(){
+  const chosen = roleFilter.value;
+  const pool = chosen ? JOBS.filter(j => j.title === chosen) : JOBS;
+  return pool.map(j => {
+    const have = j.skills.filter(s => userSkills.includes(s));
+    const gap = j.skills.filter(s => !userSkills.includes(s));
+    const pct = Math.round((have.length / j.skills.length) * 100);
+    return { ...j, have, gap, pct };
+  }).sort((a,b) => b.pct - a.pct);
+}
+
+function renderResults(){
+  const results = computeResults();
+  if (userSkills.length === 0){
+    resultsArea.innerHTML = '';
+    return;
+  }
+
+  const head = `
+    <div class="results-head">
+      <h2>Your closest matches</h2>
+      <span class="results-count">${results.length} role${results.length !== 1 ? 's' : ''} compared</span>
+    </div>`;
+
+  if (results.every(r => r.pct === 0)){
+    resultsArea.innerHTML = head + `<div class="empty"><span class="empty-serif">No overlap yet</span>None of these roles share a skill with your list — try adding a few more, or browse the suggestions above the button.</div>`;
+    return;
+  }
+
+  const cards = results.map((r, idx) => {
+    const ringColor = r.pct >= 70 ? '#4FA98C' : r.pct >= 40 ? '#C98A3E' : '#8CA0B8';
+    const planks = r.have.map(s => `<span class="plank have">${s}</span>`).join('') +
+                   r.gap.map(s => `<span class="plank gap">${s}</span>`).join('');
+    const closeNote = r.gap.length
+      ? `<div class="close-note">Closest to finished: learn <strong>${r.gap[0]}</strong>${r.gap[1] ? ` and <strong>${r.gap[1]}</strong>` : ''} to close most of the remaining gap.</div>`
+      : `<div class="close-note"><strong>Every skill on this bridge is already in place.</strong></div>`;
+
+    return `
+      <div class="job-card" data-idx="${idx}">
+        <div class="job-row">
+          <div class="match-ring">
+            ${ringSVG(r.pct, ringColor)}
+            <span class="pct">${r.pct}%</span>
+          </div>
+          <div class="job-info">
+            <p class="job-title">${r.title}</p>
+            <p class="job-meta">${r.org} &middot; <span class="gap-count">${r.gap.length} skill${r.gap.length !== 1 ? 's' : ''} to close</span></p>
+          </div>
+          <svg class="chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="job-detail">
+          <div class="job-detail-inner">
+            <p class="span-label">The full span — what you have, and what's missing</p>
+            <div class="planks">${planks}</div>
+            ${closeNote}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  resultsArea.innerHTML = head + cards;
+
+  resultsArea.querySelectorAll('.job-card').forEach(card => {
+    card.querySelector('.job-row').addEventListener('click', () => {
+      const wasOpen = card.classList.contains('open');
+      resultsArea.querySelectorAll('.job-card.open').forEach(c => c.classList.remove('open'));
+      if (!wasOpen) card.classList.add('open');
+    });
+  });
+}
+
+goBtn.addEventListener('click', renderResults);
+roleFilter.addEventListener('change', () => { if (userSkills.length) renderResults(); });
+
+renderChips();
+</script>
+
+</body>
+</html>
